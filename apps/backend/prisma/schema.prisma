@@ -19,6 +19,7 @@ enum Country {
 }
 
 enum OrderStatus {
+  DRAFT
   CREATED
   PAID
   CANCELLED
@@ -50,6 +51,7 @@ model Restaurant {
   createdAt DateTime  @default(now())
 
   menuItems MenuItem[]
+  orders    Order[]
 }
 
 model MenuItem {
@@ -66,8 +68,9 @@ model MenuItem {
 model Order {
   id              String       @id @default(uuid())
   userId          String
+  restId          String
   country         Country
-  status          OrderStatus  @default(CREATED)
+  status          OrderStatus  @default(DRAFT)
   paymentMethodId String?
   totalAmount     Decimal      @db.Decimal(10, 2) @default(0)
   createdAt       DateTime     @default(now())
@@ -75,6 +78,7 @@ model Order {
   paidAt          DateTime?
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  restaurant    Restaurant     @relation(fields: [restId], references: [id], onDelete: Cascade)
   paymentMethod PaymentMethod? @relation(fields: [paymentMethodId], references: [id])
   orderItems    OrderItem[]
 }
@@ -83,6 +87,7 @@ model OrderItem {
   id         String   @id @default(uuid())
   orderId    String
   menuItemId String
+  name       String
   quantity   Int
   price      Decimal  @db.Decimal(10, 2)
 

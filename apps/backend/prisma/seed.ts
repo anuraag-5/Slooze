@@ -93,7 +93,7 @@ async function main() {
       country: Country.AMERICA,
     },
   });
-
+  console.log(americaRestaurant.id);
   await prisma.menuItem.createMany({
     data: [
       {

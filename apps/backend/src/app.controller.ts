@@ -16,6 +16,7 @@ import {
   MenuItem as MenuItemModal,
   Role,
   Country,
+  Prisma,
 } from '@prisma/client';
 import { AuthGuard } from './auth/auth.guard';
 import { AppService } from './app.service';
@@ -53,8 +54,35 @@ export class AppController {
   @UseGuards(AuthGuard)
   @Get('restaurant/menu/:restId')
   async getMenuItems(
-    @Param('restId') restId: string
+    @Param('restId') restId: string,
   ): Promise<MenuItemModal[]> {
     return await this.appService.menuItems(restId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('create-order')
+  async createOrder(
+    @Request() req,
+    @Body()
+    orderData: {
+      restId: string;
+      item: {
+        name: string;
+        price: number;
+        quantity: number;
+        itemId: string;
+      };
+    },
+  ): Promise<
+    Prisma.OrderGetPayload<{
+      include: { orderItems: true };
+    }>
+  > {
+    return await this.appService.createOrder({
+      restId: orderData.restId,
+      item: orderData.item,
+      userId: req.user.sub,
+      country: req.user.country,
+    });
   }
 }

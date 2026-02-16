@@ -5,7 +5,7 @@ CREATE TYPE "Role" AS ENUM ('ADMIN', 'MANAGER', 'MEMBER');
 CREATE TYPE "Country" AS ENUM ('INDIA', 'AMERICA');
 
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('CREATED', 'PAID', 'CANCELLED');
+CREATE TYPE "OrderStatus" AS ENUM ('DRAFT', 'CREATED', 'PAID', 'CANCELLED');
 
 -- CreateEnum
 CREATE TYPE "PaymentType" AS ENUM ('CARD', 'UPI', 'NETBANKING');
@@ -49,8 +49,9 @@ CREATE TABLE "MenuItem" (
 CREATE TABLE "Order" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "restId" TEXT NOT NULL,
     "country" "Country" NOT NULL,
-    "status" "OrderStatus" NOT NULL DEFAULT 'CREATED',
+    "status" "OrderStatus" NOT NULL DEFAULT 'DRAFT',
     "paymentMethodId" TEXT,
     "totalAmount" DECIMAL(10,2) NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -89,6 +90,9 @@ ALTER TABLE "MenuItem" ADD CONSTRAINT "MenuItem_restaurantId_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Order" ADD CONSTRAINT "Order_restId_fkey" FOREIGN KEY ("restId") REFERENCES "Restaurant"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Order" ADD CONSTRAINT "Order_paymentMethodId_fkey" FOREIGN KEY ("paymentMethodId") REFERENCES "PaymentMethod"("id") ON DELETE SET NULL ON UPDATE CASCADE;
