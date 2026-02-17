@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
   ForbiddenException,
+  NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from './users/users.service';
 import {
@@ -23,6 +24,7 @@ import {
 } from '@prisma/client';
 import { AuthGuard } from './auth/auth.guard';
 import { AppService } from './app.service';
+import { UserType } from 'types';
 
 @Controller()
 export class AppController {
@@ -170,7 +172,18 @@ export class AppController {
   @Get('user')
   async getUser(
     @Request() req
-  ){
-    return await this.userService.user({id: req.user.sub})
+  ): Promise<UserType> {
+    const res =  await this.userService.user({id: req.user.sub})
+    if(!res) {
+      throw new NotFoundException();
+    }
+
+    return {
+      id: res.id,
+      name: res.name,
+      email: res.email,
+      role: res.role,
+      country: res.country
+    }
   }
 }
