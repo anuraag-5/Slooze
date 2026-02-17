@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
 import {
   Country,
   MenuItem as MenuItemModal,
-  Order as OrderModal,
+  PaymentMethod as PaymentMethodModal,
   OrderStatus,
+  PaymentType,
   Prisma,
   Restaurant as RestaurantModel,
   Role,
@@ -134,5 +135,63 @@ export class AppService {
         orderItems: true,
       },
     });
+  }
+
+  async executeOrder({
+    userId,
+    restId,
+    orderId,
+    paymentMethodId
+  }: {
+    userId: string;
+    restId: string;
+    orderId: string;
+    paymentMethodId: string;
+  }): Promise<
+    Prisma.OrderGetPayload<{
+      include: {
+        orderItems: true;
+        paymentMethod: true;
+      };
+    }>
+  > {
+    const order = await this.prisma.order.findFirst({
+      where: {
+        id: orderId,
+        userId,
+        restId,
+        status: OrderStatus.DRAFT,
+      },
+    });
+    if (!order) {
+      throw new BadRequestException('No active order found');
+    }
+    const completedOrder = await this.prisma.order.update({
+      where: {
+        id: orderId,
+        restId,
+        userId,
+      },
+      data: {
+        status: OrderStatus.PAID,
+        paymentMethodId,
+        paidAt: new Date(),
+      },
+      include: {
+        orderItems: true,
+        paymentMethod: true,
+      },
+    });
+
+    return completedOrder;
+  }
+
+  async addPaymentMethod({paymentType, last4}: { paymentType: PaymentType, last4: string}): Promise<PaymentMethodModal>{
+    return await this.prisma.paymentMethod.create({
+      data: {
+        type: paymentType,
+        last4
+      }
+    })
   }
 }

@@ -8,15 +8,18 @@ import {
   Delete,
   UseGuards,
   Request,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UsersService } from './users/users.service';
 import {
   User as UserModel,
   Restaurant as RestaurantModel,
   MenuItem as MenuItemModal,
+  PaymentMethod as PaymentMethodModal,
   Role,
   Country,
   Prisma,
+  PaymentType,
 } from '@prisma/client';
 import { AuthGuard } from './auth/auth.guard';
 import { AppService } from './app.service';
@@ -84,5 +87,49 @@ export class AppController {
       userId: req.user.sub,
       country: req.user.country,
     });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('place-order')
+  async placeOrder(
+    @Request() req,
+    @Body()
+    data: {
+      orderId: string;
+      restId: string;
+      paymentMethodId: string;
+    },
+  ): Promise<
+    Prisma.OrderGetPayload<{
+      include: {
+        orderItems: true;
+        paymentMethod: true;
+      };
+    }>
+  > {
+    if (req.user.role === Role.MEMBER) {
+      throw new ForbiddenException();
+    }
+    return await this.appService.executeOrder({
+      userId: req.user.sub,
+      restId: data.restId,
+      orderId: data.orderId,
+      paymentMethodId: data.paymentMethodId
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('update-payment-method')
+  async updatePaymentMethod(
+    @Request() req,
+    @Body() data: {
+      paymentType: PaymentType,
+      last4: string
+    }
+  ): Promise<PaymentMethodModal>{
+    if(req.user.role !== Role.ADMIN){
+      throw new ForbiddenException("Only admins can update payments method.");
+    }
+    return await this.appService.addPaymentMethod({ paymentType: data.paymentType, last4: data.last4})
   }
 }
