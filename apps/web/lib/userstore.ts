@@ -5,8 +5,8 @@ type User = {
   id: string;
   name: string;
   email: string;
-  role: string,
-  country: string
+  role: "ADMIN" | "MANAGER" | "MEMBER",
+  country: "INDIA" | "AMERICA"
 };
 
 type UserStore = {
@@ -16,8 +16,8 @@ type UserStore = {
     id: string;
     name: string;
     email: string;
-    role: string;
-    country: string;
+    role: "ADMIN" | "MANAGER" | "MEMBER";
+    country: "INDIA" | "AMERICA";
   }>;
   clearUser: () => void;
   clearAll: () => void;
@@ -34,8 +34,8 @@ const getActualUser = async (access_token: string) => {
     id: string;
     name: string;
     email: string;
-    role: string;
-    country: string;
+    role: "ADMIN" | "MANAGER" | "MEMBER";
+    country: "INDIA" | "AMERICA";
   };
 
   return data;

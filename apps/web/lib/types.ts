@@ -5,3 +5,9 @@ export interface ToastProps {
   variant?: "default" | "destructive";
   duration?: number;
 }
+
+export type Restaurant = {
+  id: string;
+  name: string,
+  country: "INDIA" | "AMERICA"
+}
