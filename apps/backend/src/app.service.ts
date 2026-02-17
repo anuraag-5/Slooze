@@ -25,7 +25,7 @@ export class AppService {
     const isAdmin = role === Role.ADMIN;
 
     if (isAdmin) {
-      const restaurants = await await this.prisma.restaurant.findMany();
+      const restaurants = await this.prisma.restaurant.findMany();
       return restaurants;
     }
 
@@ -49,6 +49,7 @@ export class AppService {
     userId,
     item,
     country,
+    orderId,
   }: {
     restId: string;
     userId: string;
@@ -59,13 +60,16 @@ export class AppService {
       quantity: number;
       price: number;
     };
+    orderId: string | null;
   }): Promise<
     Prisma.OrderGetPayload<{
       include: { orderItems: true };
     }>
   > {
-    let order = await this.activeOrderDraft({ userId, restId });
-    if (!order) {
+    let order = orderId
+      ? await this.activeOrderDraft({ userId: null, restId, orderId: orderId })
+      : await this.activeOrderDraft({ userId: userId, restId, orderId: null });
+    if (!order && !orderId) {
       order = await this.prisma.order.create({
         data: {
           userId,
@@ -77,6 +81,8 @@ export class AppService {
           orderItems: true,
         },
       });
+    } else if (!order) {
+      throw new BadRequestException();
     }
     const existingItem = order.orderItems.find(
       (oi) => oi.menuItemId === item.itemId,
@@ -85,7 +91,7 @@ export class AppService {
       await this.prisma.orderItem.update({
         where: { id: existingItem.id },
         data: {
-          quantity: existingItem.quantity + item.quantity,
+          quantity: item.quantity,
         },
       });
     } else {
@@ -119,15 +125,47 @@ export class AppService {
   async activeOrderDraft({
     userId,
     restId,
+    orderId,
   }: {
-    userId: string;
+    userId: string | null;
     restId: string;
+    orderId: string | null;
   }): Promise<Prisma.OrderGetPayload<{
     include: { orderItems: true };
   }> | null> {
+    if (userId) {
+      return await this.prisma.order.findFirst({
+        where: {
+          userId,
+          restId,
+          status: OrderStatus.DRAFT,
+        },
+        include: {
+          orderItems: true,
+        },
+      });
+    }
     return await this.prisma.order.findFirst({
       where: {
-        userId,
+        id: orderId!,
+        restId,
+        status: OrderStatus.DRAFT,
+      },
+      include: {
+        orderItems: true,
+      },
+    });
+  }
+
+  async getAllActiveDrafts({
+    restId,
+  }: {
+    restId: string;
+  }): Promise<Prisma.OrderGetPayload<{
+    include: { orderItems: true };
+  }>[] | null> {
+    return await this.prisma.order.findMany({
+      where: {
         restId,
         status: OrderStatus.DRAFT,
       },
@@ -141,7 +179,7 @@ export class AppService {
     userId,
     restId,
     orderId,
-    paymentMethodId
+    paymentMethodId,
   }: {
     userId: string;
     restId: string;
@@ -158,7 +196,6 @@ export class AppService {
     const order = await this.prisma.order.findFirst({
       where: {
         id: orderId,
-        userId,
         restId,
         status: OrderStatus.DRAFT,
       },
@@ -170,7 +207,6 @@ export class AppService {
       where: {
         id: orderId,
         restId,
-        userId,
       },
       data: {
         status: OrderStatus.PAID,
@@ -186,12 +222,26 @@ export class AppService {
     return completedOrder;
   }
 
-  async addPaymentMethod({paymentType, last4}: { paymentType: PaymentType, last4: string}): Promise<PaymentMethodModal>{
+  async addPaymentMethod({
+    paymentType,
+    last4,
+  }: {
+    paymentType: PaymentType;
+    last4: string;
+  }): Promise<PaymentMethodModal> {
     return await this.prisma.paymentMethod.create({
       data: {
         type: paymentType,
-        last4
-      }
-    })
+        last4,
+      },
+    });
+  }
+
+  async cancelOrder({ orderId, restId }: { orderId: string; restId: string }) {
+    const order = await this.prisma.order.findFirst({
+      where: {
+        id: orderId,
+      },
+    });
   }
 }

@@ -75,6 +75,7 @@ export class AppController {
         quantity: number;
         itemId: string;
       };
+      orderId: string | null;
     },
   ): Promise<
     Prisma.OrderGetPayload<{
@@ -86,6 +87,7 @@ export class AppController {
       item: orderData.item,
       userId: req.user.sub,
       country: req.user.country,
+      orderId: orderData.orderId,
     });
   }
 
@@ -114,7 +116,7 @@ export class AppController {
       userId: req.user.sub,
       restId: data.restId,
       orderId: data.orderId,
-      paymentMethodId: data.paymentMethodId
+      paymentMethodId: data.paymentMethodId,
     });
   }
 
@@ -122,14 +124,46 @@ export class AppController {
   @Post('update-payment-method')
   async updatePaymentMethod(
     @Request() req,
-    @Body() data: {
-      paymentType: PaymentType,
-      last4: string
+    @Body()
+    data: {
+      paymentType: PaymentType;
+      last4: string;
+    },
+  ): Promise<PaymentMethodModal> {
+    if (req.user.role !== Role.ADMIN) {
+      throw new ForbiddenException('Only admins can update payments method.');
     }
-  ): Promise<PaymentMethodModal>{
-    if(req.user.role !== Role.ADMIN){
-      throw new ForbiddenException("Only admins can update payments method.");
+    return await this.appService.addPaymentMethod({
+      paymentType: data.paymentType,
+      last4: data.last4,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('cancel-order')
+  async cancelOrder(
+    @Request() req,
+    @Body()
+    data: {
+      orderId: string;
+      restId: string;
+    },
+  ) {
+    if (req.user.role === Role.MEMBER) {
+      throw new ForbiddenException('Members cannot cancel order');
     }
-    return await this.appService.addPaymentMethod({ paymentType: data.paymentType, last4: data.last4})
+
+    return await this.appService.cancelOrder({
+      orderId: data.orderId,
+      restId: data.restId,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('restaurant/carts/:restId')
+  async listCarts(
+    @Param('restId') restId: string,
+  ){
+    return await this.appService.getAllActiveDrafts({restId});
   }
 }
