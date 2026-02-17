@@ -176,12 +176,10 @@ export class AppService {
   }
 
   async executeOrder({
-    userId,
     restId,
     orderId,
     paymentMethodId,
   }: {
-    userId: string;
     restId: string;
     orderId: string;
     paymentMethodId: string;
@@ -238,7 +236,7 @@ export class AppService {
   }
 
   async cancelOrder({ orderId, restId }: { orderId: string; restId: string }) {
-    const order = await this.prisma.order.findFirst({
+    await this.prisma.order.delete({
       where: {
         id: orderId,
       },

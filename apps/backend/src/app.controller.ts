@@ -34,14 +34,14 @@ export class AppController {
   @Post('user')
   async signupUser(
     @Body()
-    userData: {
+    data: {
       name: string;
       email: string;
       password: string;
-      role: Role;
       country: Country;
     },
   ): Promise<UserModel> {
+    const userData = {...data, role: Role.MEMBER}
     return await this.userService.createUser(userData);
   }
 
@@ -113,7 +113,6 @@ export class AppController {
       throw new ForbiddenException();
     }
     return await this.appService.executeOrder({
-      userId: req.user.sub,
       restId: data.restId,
       orderId: data.orderId,
       paymentMethodId: data.paymentMethodId,
@@ -165,5 +164,13 @@ export class AppController {
     @Param('restId') restId: string,
   ){
     return await this.appService.getAllActiveDrafts({restId});
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('user')
+  async getUser(
+    @Request() req
+  ){
+    return await this.userService.user({id: req.user.sub})
   }
 }
