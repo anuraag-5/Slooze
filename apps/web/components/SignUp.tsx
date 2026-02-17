@@ -21,6 +21,9 @@ export default function SignUp() {
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
+    if (localStorage.getItem("access_token")) {
+      router.push("/restaurants");
+    }
   }, [router]);
 
   const form = useForm({
@@ -28,7 +31,7 @@ export default function SignUp() {
       name: "",
       email: "",
       password: "",
-      country: ""
+      country: "",
     },
     validators: {
       onSubmit: signupSchema,
@@ -38,12 +41,12 @@ export default function SignUp() {
         setLoading(true);
         console.log(value);
         const { name, email, password, country } = value;
-        await signUp({name, email, password, country});
+        await signUp({ name, email, password, country });
         toast({
           title: "Signed Up",
           description: "",
         });
-        router.push('/login');
+        router.push("/login");
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Sign up failed";
@@ -51,8 +54,7 @@ export default function SignUp() {
           title: "Sign Up Failed",
           description: errorMessage,
         });
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     },

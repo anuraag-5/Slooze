@@ -23,7 +23,7 @@ export default function SignIn() {
 
   React.useEffect(() => {
     if (localStorage.getItem("access_token")) {
-      router.push("/");
+      router.push("/restaurants");
     }
   }, [router]);
 
@@ -54,7 +54,7 @@ export default function SignIn() {
           description: "You have successfully signed in.",
         });
 
-        router.push("/");
+        router.push("/restaurants");
         router.refresh();
       } catch (error) {
         const errorMessage =
