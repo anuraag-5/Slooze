@@ -27,24 +27,8 @@ export const signUp = async ({name, email, password, country}:{name: string, ema
   }
 };
 
-export const signOutUser = async (apiToken: string) => {
-  try {
-    const resp = await axios.post(
-      process.env.NEXT_PUBLIC_BACKEND_URL! + "/api/auth/sign-out",
-      {},
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiToken}`,
-        },
-      }
-    );
-    return (await resp.data) as { success: boolean };
-  } catch (_) {
-    return {
-      success: false,
-    };
-  }
+export const signOutUser = async () => {
+  localStorage.removeItem("access_token");
 };
 
 export const signIn = async ({email, password}: { email: string, password: string}) => {

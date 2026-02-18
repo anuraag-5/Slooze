@@ -24,21 +24,29 @@ type UserStore = {
 };
 
 const getActualUser = async (access_token: string) => {
-  const res = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL! + "/user", {
-    headers: {
-      "Authorization": `Bearer ${access_token}`
-    },
-  });
+  try {
+    const res = await axios.get(process.env.NEXT_PUBLIC_BACKEND_URL! + "/user", {
+      headers: {
+        "Authorization": `Bearer ${access_token}`
+      },
+    });
 
-  const data = (await res.data) as {
-    id: string;
-    name: string;
-    email: string;
-    role: "ADMIN" | "MANAGER" | "MEMBER";
-    country: "INDIA" | "AMERICA";
-  };
+    const data = (await res.data) as {
+      id: string;
+      name: string;
+      email: string;
+      role: "ADMIN" | "MANAGER" | "MEMBER";
+      country: "INDIA" | "AMERICA";
+    };
 
-  return data;
+    return data;
+  } catch (error) {
+    // If token is expired or invalid, clear it from localStorage
+    if (axios.isAxiosError(error) && (error.response?.status === 401 || error.response?.status === 403)) {
+      localStorage.removeItem("access_token");
+    }
+    throw error;
+  }
 };
 
 export const useUserStore = create<UserStore>((set) => ({

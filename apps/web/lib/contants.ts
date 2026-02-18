@@ -1,3 +1,3 @@
-export const america = "Experience the true taste of America with a menu crafted around bold flavors, generous portions, and comforting classics. From juicy burgers and smoky BBQ to perfectly grilled steaks and all-day breakfast favorites, every dish is made with quality ingredients and authentic recipes."
+export const america = "Experience the true taste of America with a menu crafted around bold flavors, generous portions, and comforting classics."
 
-export const india = "Discover the rich and vibrant flavors of India through a menu inspired by tradition and crafted with passion. From aromatic biryanis and creamy curries to sizzling tandoori specialties and freshly baked breads, every dish celebrates authentic spices and time-honored cooking techniques."
+export const india = "Discover the rich and vibrant flavors of India through a menu inspired by tradition and crafted with passion."
