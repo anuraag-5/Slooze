@@ -15,13 +15,21 @@ const MenuItems = ({menuItems, orderId, restId}: {menuItems: MenuItem[] | null, 
   const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
   const handleItemClick = (mi: MenuItem) => {
     if(orderId && activeCarts) {
-      const ac = activeCarts.find((ac) => ac.orderItems.find((oi) => oi.menuItemId === mi.id));
+      const ac = activeCarts.find((ac) => ac.id === orderId);
+      // const ac = activeCarts.find((ac) => ac.orderItems.find((oi) => oi.menuItemId === mi.id));
       if(ac) {
         const item = ac.orderItems.find((oi) => oi.menuItemId === mi.id);
-        setQuantity(item!.quantity);
-        setActiveOrderId(ac.id);
-        setSelectedMenu(mi);
-        return;
+        if(!item) {
+          setQuantity(0);
+          setActiveOrderId(ac.id);
+          setSelectedMenu(mi);
+          return;
+        } else {
+          setQuantity(item!.quantity);
+          setActiveOrderId(ac.id);
+          setSelectedMenu(mi);
+          return;
+        }
       }
     } else if(!orderId && activeCarts) {
       const ac = activeCarts.find((ac) => (ac.userId === user?.id && ac.orderItems.find((oi) => oi.menuItemId === mi.id)));

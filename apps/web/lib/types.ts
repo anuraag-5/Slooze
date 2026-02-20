@@ -59,3 +59,12 @@ export type ActiveCartType = {
     updatedAt: string;
   };
 };
+
+export type OrderItem = {
+  id: string;
+  orderId: string;
+  menuItemId: string;
+  name: string;
+  quantity: number;
+  price: string;
+};

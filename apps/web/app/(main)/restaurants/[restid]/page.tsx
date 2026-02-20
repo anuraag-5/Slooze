@@ -39,7 +39,7 @@ const MenuPage = ({ params }: { params: Promise<{ restId: string }> }) => {
       .then((m) => setMenuItems(m))
       .finally(() => setLoading(false));
     getAc().then((c) => setActiveCarts(c));
-  }, [restId]);
+  }, [restId, orderId]);
 
   if (loading) {
     return <LoadingSpinner />;

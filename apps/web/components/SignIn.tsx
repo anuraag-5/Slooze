@@ -49,11 +49,6 @@ export default function SignIn() {
           });
         }
 
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in.",
-        });
-
         router.push("/restaurants");
         router.refresh();
       } catch (error) {
