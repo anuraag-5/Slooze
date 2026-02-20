@@ -82,7 +82,7 @@ export class AppController {
   ): Promise<
     Prisma.OrderGetPayload<{
       include: { orderItems: true };
-    }>
+    }> | undefined
   > {
     return await this.appService.createOrder({
       restId: orderData.restId,
@@ -185,5 +185,19 @@ export class AppController {
       role: res.role,
       country: res.country
     }
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/payment-methods')
+  async getAllPaymentMethods() {
+    return await this.appService.getAllPaymentMethods();
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('cart/:orderId')
+  async getOrderByOrderId(
+    @Param('orderId') orderId: string
+  ) {
+    return this.appService.getOrderByOrderId({orderId});
   }
 }

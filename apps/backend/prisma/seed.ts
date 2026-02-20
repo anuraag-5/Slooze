@@ -126,9 +126,25 @@ async function main() {
       last4: "4242",
     },
     {
+      type: PaymentType.CARD,
+      last4: "5252",
+    },
+    {
       type: PaymentType.UPI,
       last4: "8899",
     },
+    {
+      type: PaymentType.UPI,
+      last4: "9988"
+    },
+    {
+      type: PaymentType.NETBANKING,
+      last4: "2233",
+    },
+    {
+      type: PaymentType.NETBANKING,
+      last4: "3322",
+    }
   ],
 })
 

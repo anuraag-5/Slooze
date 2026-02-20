@@ -64,7 +64,7 @@ export class AppService {
   }): Promise<
     Prisma.OrderGetPayload<{
       include: { orderItems: true };
-    }>
+    }> | undefined
   > {
     let order = orderId
       ? await this.activeOrderDraft({ userId: null, restId, orderId: orderId })
@@ -87,13 +87,19 @@ export class AppService {
     const existingItem = order.orderItems.find(
       (oi) => oi.menuItemId === item.itemId,
     );
-    if (existingItem) {
+    if (existingItem && item.quantity === 0) {
+      await this.prisma.orderItem.delete({
+        where: { id: existingItem.id }
+      });
+    } else if(existingItem && item.quantity !== 0){
       await this.prisma.orderItem.update({
         where: { id: existingItem.id },
         data: {
           quantity: item.quantity,
         },
       });
+    } else if(!existingItem && item.quantity === 0) {
+      return;
     } else {
       await this.prisma.orderItem.create({
         data: {
@@ -157,12 +163,31 @@ export class AppService {
     });
   }
 
+  async getOrderByOrderId({
+    orderId,
+  }: {
+    orderId: string;
+  }): Promise<Prisma.OrderGetPayload<{
+    include: { orderItems: true };
+  }> | null> {
+    return await this.prisma.order.findFirst({
+      where: {
+        id: orderId,
+        status: OrderStatus.DRAFT,
+      },
+      include: {
+        orderItems: true,
+        user: true
+      },
+    });
+  }
+
   async getAllActiveDrafts({
     restId,
   }: {
     restId: string;
   }): Promise<Prisma.OrderGetPayload<{
-    include: { orderItems: true };
+    include: { orderItems: true, user: true };
   }>[] | null> {
     return await this.prisma.order.findMany({
       where: {
@@ -171,6 +196,7 @@ export class AppService {
       },
       include: {
         orderItems: true,
+        user: true
       },
     });
   }
@@ -241,5 +267,9 @@ export class AppService {
         id: orderId,
       },
     });
+  }
+
+  async getAllPaymentMethods(): Promise<PaymentMethodModal[]> {
+    return await this.prisma.paymentMethod.findMany();
   }
 }
