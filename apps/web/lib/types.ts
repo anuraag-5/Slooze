@@ -8,6 +8,54 @@ export interface ToastProps {
 
 export type Restaurant = {
   id: string;
-  name: string,
-  country: "INDIA" | "AMERICA"
-}
+  name: string;
+  country: "INDIA" | "AMERICA";
+};
+
+export type PaymentMethod = {
+  id: string;
+  last4: string;
+  type: "CARD" | "NETBANKING" | "UPI";
+  createdAt: Date;
+};
+
+export type MenuItem = {
+  id: string;
+  price: number;
+  name: string;
+  createdAt: Date;
+  restaurantId: string;
+};
+
+export type ActiveCartType = {
+  id: string;
+  userId: string;
+  restId: string;
+  country: "INDIA" | "AMERICA";
+  status: "DRAFT" | "CANCELLED" | "PAID" | "CREATED";
+  paymentMethodId: string | null;
+  totalAmount: string;
+  createdAt: string;
+  updatedAt: string;
+  paidAt: string | null;
+
+  orderItems: {
+    id: string;
+    orderId: string;
+    menuItemId: string;
+    name: string;
+    quantity: number;
+    price: string;
+  }[];
+
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    password: string;
+    role: "ADMIN" | "MEMBER" | "MANAGER";
+    country: "INDIA" | "AMERICA";
+    createdAt: string;
+    updatedAt: string;
+  };
+};

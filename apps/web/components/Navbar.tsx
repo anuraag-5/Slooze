@@ -17,16 +17,27 @@ const Navbar = ({
   const router = useRouter();
 
   return (
-    <div className="flex justify-between items-center">
-      <div className={"text-4xl text-[#6750A4] " + numanFont.className}>
+    <motion.div 
+    className="flex justify-between items-center"
+    initial={{
+      y: -5
+    }}
+    animate={{
+      y: 0
+    }}
+    transition={{
+      duration: 0.6
+    }}
+    >
+      <div className={"text-lg md:text-2xl lg:text-4xl text-[#6750A4] " + numanFont.className}>
         Slooze
       </div>
       <div className="flex gap-2">
         <div
-          className="p-3 min-w-[150px] text-center relative cursor-pointer"
+          className="p-1 md:p-3 min-w-[90px] md:min-w-[150px] text-center relative cursor-pointer"
           onClick={() => setCurrentTab(path)}
         >
-          <span className="relative z-20">
+          <span className="relative z-20 text-[12px] md:text-[16px]">
             {path === "restaurants" ? "Restaurants" : "Menu"}
           </span>
           {currentTab === "restaurants" || currentTab === "menu" ? (
@@ -40,10 +51,10 @@ const Navbar = ({
           ) : null}
         </div>
         <div
-          className="p-3 min-w-[150px] text-center relative cursor-pointer"
+          className="p-1 md:p-3 min-w-[90px] md:min-w-[150px] text-center relative cursor-pointer"
           onClick={() => setCurrentTab("settings")}
         >
-          <span className="relative z-20">Settings</span>
+          <span className="relative z-20 text-[12px] md:text-[16px]">Settings</span>
           {currentTab === "settings" ? (
             <motion.div
               className="absolute inset-0 bg-[#6750A4] z-10 rounded-full"
@@ -62,10 +73,10 @@ const Navbar = ({
           router.replace("/login");
         }}
       >
-        <div className="text-black">Log out</div>
+        <div className="text-black hidden md:block">Log out</div>
         <Image src={"/logout-icon.svg"} width={28} height={28} alt="" />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

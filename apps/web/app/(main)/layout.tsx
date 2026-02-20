@@ -21,14 +21,19 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         return null;
       }
     };
+    const getPM = async () => {
+      const paymentMethods = await store.getPaymentMethods(access_token);
+      return paymentMethods;
+    };
     getUser().then((u) => {
       if (u) {
         store.setUser(u);
       }
     });
+    getPM().then((pm) => store.setPaymentMethods(pm))
   }, []);
   return (
-    <section className="bg-[#E5DBFF] min-h-screen p-12">
+    <section className="bg-[#E5DBFF] min-h-screen p-4 md:p-10 lg:p-12 flex flex-col">
       {children}
     </section>
   );

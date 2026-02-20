@@ -1,17 +1,17 @@
 "use client";
 
-import { getRestaurants } from '@/lib/app';
-import { Restaurant } from '@/lib/types';
+import { getPaymentMethods, getRestaurants } from '@/lib/app';
+import { PaymentMethod, Restaurant } from '@/lib/types';
 import { useUserStore } from '@/lib/userstore'
 import { useEffect, useState } from 'react';
-import { america, india } from '@/lib/contants';
 import Navbar from '@/components/Navbar';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import Restaurants from '@/components/Restaurants';
 import Settings from '@/components/Settings';
+import { numanFont } from '@/app/fonts';
 
 const RestaurantsPage = () => {
-  const { user } = useUserStore();
+  const { user, paymentMethods } = useUserStore();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [currentTab, setCurrenTab] = useState("restaurants");
@@ -29,13 +29,8 @@ const RestaurantsPage = () => {
         }
         return restaurants;
     }
-
     getRests().then((r) => setRestaurants(r!)).finally(() => setLoading(false));
   }, []);
-
-  const getDescription = (country: "INDIA" | "AMERICA") => {
-    return country === "AMERICA" ? america : india;
-  };
 
   if (loading) {
     return (
@@ -54,10 +49,11 @@ const RestaurantsPage = () => {
   }
 
   return (
-    <div>
+    <div className='flex flex-col flex-1'>
       <Navbar path="restaurants" currentTab={currentTab} setCurrentTab={setCurrenTab}/>
+      <div className={'text-xl md:text-2xl lg:text-3xl my-6 ' + numanFont.className}>Hi, {user?.role === "ADMIN" ? "Admin" : user?.role === "MANAGER" ? "Manager" : "Member"}</div>
       {
-        currentTab === "restaurants" ? <Restaurants /> : <Settings />
+        currentTab === "restaurants" ? <Restaurants restaurants={restaurants}/> : <Settings paymentMethods={paymentMethods}/>
       }
     </div>
   );
