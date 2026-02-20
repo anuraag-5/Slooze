@@ -57,7 +57,7 @@ const MenuPage = ({ params }: { params: Promise<{ restId: string }> }) => {
         ) : (
           <Settings />
         )}
-        {activeCarts && activeCarts.length > 0 ? (
+        {activeCarts && activeCarts.length > 0 && currentTab === "menu" ? (
           <motion.div
             className="fixed bottom-8 left-0 w-full flex flex-col gap-4 items-center"
             initial={{

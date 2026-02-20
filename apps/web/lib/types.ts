@@ -16,7 +16,13 @@ export type PaymentMethod = {
   id: string;
   last4: string;
   type: "CARD" | "NETBANKING" | "UPI";
-  createdAt: Date;
+  createdAt: string;
+};
+
+export type GroupedPaymentMethods = {
+  CARD: PaymentMethod[];
+  NETBANKING: PaymentMethod[];
+  UPI: PaymentMethod[];
 };
 
 export type MenuItem = {

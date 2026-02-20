@@ -1,6 +1,6 @@
 import axios from "axios";
 import { create } from "zustand";
-import { PaymentMethod, ActiveCartType } from "./types";
+import { PaymentMethod, ActiveCartType, GroupedPaymentMethods } from "./types";
 import { getPaymentMethods } from "./app";
 
 type User = {
@@ -13,14 +13,14 @@ type User = {
 
 type UserStore = {
   user: User | null;
-  paymentMethods: PaymentMethod[] | null;
+  paymentMethods: GroupedPaymentMethods | null;
   activeCarts: ActiveCartType[] | null;
 
   setUser: (user: User) => void;
   getUser: (access_token: string) => Promise<User>;
 
-  setPaymentMethods: (paymentMethods: PaymentMethod[] | null) => void;
-  getPaymentMethods: (access_token: string) => Promise<PaymentMethod[] | null>;
+  setPaymentMethods: (paymentMethods: GroupedPaymentMethods | null) => void;
+  getPaymentMethods: (access_token: string) => Promise<GroupedPaymentMethods | null>;
 
   setActiveCarts: (carts: ActiveCartType[] | null) => void;
   getActiveCarts: (restId: string, access_token: string) => Promise<ActiveCartType[]>;

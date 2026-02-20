@@ -16,7 +16,6 @@ const MenuItems = ({menuItems, orderId, restId}: {menuItems: MenuItem[] | null, 
   const handleItemClick = (mi: MenuItem) => {
     if(orderId && activeCarts) {
       const ac = activeCarts.find((ac) => ac.id === orderId);
-      // const ac = activeCarts.find((ac) => ac.orderItems.find((oi) => oi.menuItemId === mi.id));
       if(ac) {
         const item = ac.orderItems.find((oi) => oi.menuItemId === mi.id);
         if(!item) {
@@ -54,7 +53,6 @@ const MenuItems = ({menuItems, orderId, restId}: {menuItems: MenuItem[] | null, 
   }
   return (
     <>
-      {/* If menu is opened */}
       {selectedMenu && (
         <MenuOpened
           restId={restId}
@@ -76,13 +74,13 @@ const MenuItems = ({menuItems, orderId, restId}: {menuItems: MenuItem[] | null, 
       >
         <div
           className={
-            "text-lg md:text-xl lg:text-2xl my-4 " + numanFont.className
+            "text-lg md:text-xl lg:text-2xl mt-10 " + numanFont.className
           }
         >
           Explore our cuisines :
         </div>
 
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-7">
           {menuItems && menuItems.length > 0
             ? menuItems.map((mi) => (
                 <div
@@ -107,7 +105,8 @@ const MenuItems = ({menuItems, orderId, restId}: {menuItems: MenuItem[] | null, 
                     />
                   </div>
 
-                  <div className="bg-white rounded-t-[35px] absolute bottom-0 left-0 right-0 h-[50%] -ml-[1.3px] -mb-[1.2px] -mr-[1.2px] shadow-[0px_0px_28px_#6750A440] flex flex-col px-4 pt-6 gap-10">
+                  <div className="bg-white rounded-t-[35px] absolute bottom-0 left-0 right-0 h-[50%] -ml-[1.3px] -mb-[1.2px] -mr-[1.2px] shadow-[0px_0px_28px_#6750A440] flex flex-col px-4 pt-6 gap-10"
+                  >
                     <div className="flex justify-between">
                       <div className="text-xl text-[#6750A4]">{mi.name}</div>
 

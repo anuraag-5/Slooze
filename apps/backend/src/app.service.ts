@@ -62,9 +62,10 @@ export class AppService {
     };
     orderId: string | null;
   }): Promise<
-    Prisma.OrderGetPayload<{
-      include: { orderItems: true };
-    }> | undefined
+    | Prisma.OrderGetPayload<{
+        include: { orderItems: true };
+      }>
+    | undefined
   > {
     let order = orderId
       ? await this.activeOrderDraft({ userId: null, restId, orderId: orderId })
@@ -89,16 +90,16 @@ export class AppService {
     );
     if (existingItem && item.quantity === 0) {
       await this.prisma.orderItem.delete({
-        where: { id: existingItem.id }
+        where: { id: existingItem.id },
       });
-    } else if(existingItem && item.quantity !== 0){
+    } else if (existingItem && item.quantity !== 0) {
       await this.prisma.orderItem.update({
         where: { id: existingItem.id },
         data: {
           quantity: item.quantity,
         },
       });
-    } else if(!existingItem && item.quantity === 0) {
+    } else if (!existingItem && item.quantity === 0) {
       return;
     } else {
       await this.prisma.orderItem.create({
@@ -177,18 +178,17 @@ export class AppService {
       },
       include: {
         orderItems: true,
-        user: true
+        user: true,
       },
     });
   }
 
-  async getAllActiveDrafts({
-    restId,
-  }: {
-    restId: string;
-  }): Promise<Prisma.OrderGetPayload<{
-    include: { orderItems: true, user: true };
-  }>[] | null> {
+  async getAllActiveDrafts({ restId }: { restId: string }): Promise<
+    | Prisma.OrderGetPayload<{
+        include: { orderItems: true; user: true };
+      }>[]
+    | null
+  > {
     return await this.prisma.order.findMany({
       where: {
         restId,
@@ -196,7 +196,7 @@ export class AppService {
       },
       include: {
         orderItems: true,
-        user: true
+        user: true,
       },
     });
   }
@@ -261,7 +261,7 @@ export class AppService {
     });
   }
 
-  async cancelOrder({ orderId, restId }: { orderId: string; restId: string }) {
+  async cancelOrder({ orderId }: { orderId: string; restId: string }) {
     await this.prisma.order.delete({
       where: {
         id: orderId,
@@ -269,7 +269,27 @@ export class AppService {
     });
   }
 
-  async getAllPaymentMethods(): Promise<PaymentMethodModal[]> {
-    return await this.prisma.paymentMethod.findMany();
+  async getAllPaymentMethods(): Promise<
+    Record<PaymentType, PaymentMethodModal[]>
+  > {
+    const methods = await this.prisma.paymentMethod.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const grouped = methods.reduce(
+      (acc, method) => {
+        if (!acc[method.type]) {
+          acc[method.type] = [];
+        }
+
+        acc[method.type].push(method);
+        return acc;
+      },
+      {} as Record<PaymentType, PaymentMethodModal[]>,
+    );
+
+    return grouped;
   }
 }
