@@ -41,7 +41,7 @@ const CartPage = () => {
 
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
-    if (!access_token) return;
+    if (!access_token || !orderId) return;
     const getCartOrder = async () => {
       const cart = await getOrderByOrderId(access_token, orderId);
       return cart;
