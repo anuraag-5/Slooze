@@ -1,10 +1,13 @@
 "use client";
 
+import { numanFont } from "@/app/fonts";
 import Item from "@/components/Item";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { cancelOrder, getOrderByOrderIdPlaced } from "@/lib/app";
+import { signOutUser } from "@/lib/auth";
 import { PlacedOrderType } from "@/lib/types";
 import { useUserStore } from "@/lib/userstore";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { use, useEffect, useState } from "react";
 
@@ -36,7 +39,7 @@ const OrderPage = ({ params }: { params: Promise<{ orderId: string }> }) => {
     if (!access_token) {
       return;
     }
-    await cancelOrder({access_token, orderId})
+    await cancelOrder({ access_token, orderId });
     router.replace(`/orders/${order?.restId}`);
   };
 
@@ -44,9 +47,28 @@ const OrderPage = ({ params }: { params: Promise<{ orderId: string }> }) => {
 
   return (
     <div className="flex-1 flex flex-col items-center gap-4 p-4">
-      <div className="text-xl font-semibold">
-        Order Status: {order?.status}
+      <div className="flex w-full justify-between">
+        <div
+          className={
+            "text-lg md:text-2xl lg:text-4xl text-[#6750A4] cursor-pointer " +
+            numanFont.className
+          }
+          onClick={() => router.push("/restaurants")}
+        >
+          Slooze
+        </div>
+        <div
+          className="flex gap-4 items-center cursor-pointer"
+          onClick={() => {
+            signOutUser();
+            router.replace("/login");
+          }}
+        >
+          <div className="text-black hidden md:block">Log out</div>
+          <Image src={"/logout-icon.svg"} width={28} height={28} alt="" />
+        </div>
       </div>
+      <div className="text-xl font-semibold">Order Status: {order?.status}</div>
 
       {order &&
         order.orderItems.map((oi) => (
@@ -60,12 +82,19 @@ const OrderPage = ({ params }: { params: Promise<{ orderId: string }> }) => {
         ))}
 
       {/* Cancel Button */}
-      {user?.role !== "MEMBER" && (
+      {user?.role !== "MEMBER" ?  (
         <button
           onClick={handleCancel}
           className="mt-6 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition"
         >
           Cancel Order
+        </button>
+      ): (
+        <button
+          className="mt-6 text-sm px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition cursor-not-allowed"
+          disabled
+        >
+          Member can't cancel order
         </button>
       )}
     </div>

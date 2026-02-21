@@ -1,16 +1,20 @@
 "use client";
 
+import { numanFont } from "@/app/fonts";
 import Item from "@/components/Item";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { getOrderByOrderId, placeOrder } from "@/lib/app";
+import { signOutUser } from "@/lib/auth";
 import { ActiveCartType } from "@/lib/types";
 import { useUserStore } from "@/lib/userstore";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 
 const CartPage = ({ params }: { params: Promise<{ orderId: string }> }) => {
   const router = useRouter();
-  const { paymentMethods, user, getActiveCarts, setActiveCarts} = useUserStore();
+  const { paymentMethods, user, getActiveCarts, setActiveCarts } =
+    useUserStore();
   const [selectedType, setSelectedType] = useState<
     "CARD" | "UPI" | "NETBANKING"
   >("CARD");
@@ -22,8 +26,13 @@ const CartPage = ({ params }: { params: Promise<{ orderId: string }> }) => {
 
   const handleCheckout = async () => {
     const access_token = localStorage.getItem("access_token");
-    if (!access_token || user?.role === 'MEMBER') return;
-    await placeOrder({access_token, restId: cart!.restId, orderId, paymentMethodId: selectedPaymentId });
+    if (!access_token || user?.role === "MEMBER") return;
+    await placeOrder({
+      access_token,
+      restId: cart!.restId,
+      orderId,
+      paymentMethodId: selectedPaymentId,
+    });
     const updatedcart = await getActiveCarts(cart!.restId, access_token);
     setActiveCarts(updatedcart);
     router.replace(`/restaurants/${cart!.restId}`);
@@ -47,6 +56,27 @@ const CartPage = ({ params }: { params: Promise<{ orderId: string }> }) => {
 
   return (
     <section className="flex-1 flex flex-col justify-start items-center gap-5">
+      <div className="flex w-full justify-between">
+        <div
+          className={
+            "text-lg md:text-2xl lg:text-4xl text-[#6750A4] cursor-pointer " +
+            numanFont.className
+          }
+          onClick={() => router.push("/restaurants")}
+        >
+          Slooze
+        </div>
+        <div
+          className="flex gap-4 items-center cursor-pointer"
+          onClick={() => {
+            signOutUser();
+            router.replace("/login");
+          }}
+        >
+          <div className="text-black hidden md:block">Log out</div>
+          <Image src={"/logout-icon.svg"} width={28} height={28} alt="" />
+        </div>
+      </div>
       <div className="w-full text-center text-xl md:text-2xl lg:text-3xl mb-5">
         Your Cart
       </div>
@@ -126,7 +156,7 @@ const CartPage = ({ params }: { params: Promise<{ orderId: string }> }) => {
               : "bg-gray-400 cursor-not-allowed"
           }`}
         >
-          {user?.role === "MEMBER" ? "Member can't order": "Place order"}
+          {user?.role === "MEMBER" ? "Member can't place order" : "Place order"}
         </button>
       )}
     </section>

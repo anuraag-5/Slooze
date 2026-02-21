@@ -48,11 +48,10 @@ const MenuOpened = ({
         orderId: activeOrderId,
       });
     };
-    updateCart()
-      .then(async () => {
-        const updatedCarts = await getActiveCarts(restId, access_token);
-        setActiveCarts(updatedCarts);
-      })
+    updateCart().then(async () => {
+      const updatedCarts = await getActiveCarts(restId, access_token);
+      setActiveCarts(updatedCarts);
+    });
   }, [debouncedQty]);
   const handleItemClose = () => {
     onClose();
@@ -80,15 +79,13 @@ const MenuOpened = ({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
       >
-        <div 
-        className="absolute right-8 top-5 cursor-pointer"
-        onClick={() => handleItemClose()}
+        <div
+          className="absolute right-8 top-5 cursor-pointer"
+          onClick={() => handleItemClose()}
         >
           ❌
         </div>
-        <div
-          className="relative h-full max-h-[500px] w-full max-w-[350px] border-2 border-[#6750A4] rounded-t-[35px] cursor-pointer"
-        >
+        <div className="relative h-full max-h-[500px] w-full max-w-[350px] border-2 border-[#6750A4] rounded-t-[35px] cursor-pointer">
           <div className="relative rounded-t-[35px] h-[70%]">
             <Image
               src={

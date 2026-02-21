@@ -3,12 +3,8 @@
 import { createOrder } from "@/lib/app";
 import useDebouncedQuantity from "@/lib/hooks";
 import { ActiveCartType, OrderItem } from "@/lib/types";
-import {
-  Dispatch,
-  MouseEvent,
-  SetStateAction,
-  useEffect,
-} from "react";
+import { useRouter } from "next/navigation";
+import { Dispatch, MouseEvent, SetStateAction, useEffect } from "react";
 
 const ItemCard = ({
   quantity,
@@ -34,6 +30,7 @@ const ItemCard = ({
   setDeleteItem: Dispatch<SetStateAction<boolean>> | null;
   isCart: boolean;
 }) => {
+  const router = useRouter();
   const debouncedQty = useDebouncedQuantity(quantity, 650);
   useEffect(() => {
     if (!isCart) {
@@ -58,6 +55,12 @@ const ItemCard = ({
       .then(async () => {
         const updatedCarts = await getActiveCarts(restId, access_token);
         setActiveCarts(updatedCarts);
+        const cartStillExists = updatedCarts!.some(
+          (cart) => cart.id === orderId,
+        );
+        if (!cartStillExists) {
+          router.replace(`/restaurants/${restId}`);
+        }
       })
       .finally(() => {
         if (debouncedQty === 0) setDeleteItem!(true);

@@ -31,6 +31,11 @@ const MenuItems = ({menuItems, orderId, restId}: {menuItems: MenuItem[] | null, 
           setSelectedMenu(mi);
           return;
         }
+      } else {
+        setQuantity(0);
+        setActiveOrderId(null);
+        setSelectedMenu(mi);
+        return;
       }
     } else if(!orderId && activeCarts) {
       const ac = activeCarts.find((ac) => (ac.userId === user?.id && ac.orderItems.find((oi) => oi.menuItemId === mi.id)));
