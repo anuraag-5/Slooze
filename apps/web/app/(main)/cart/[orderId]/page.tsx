@@ -9,9 +9,9 @@ import { ActiveCartType } from "@/lib/types";
 import { useUserStore } from "@/lib/userstore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-const CartPage = ({ params }: { params: Promise<{ orderId: string }> }) => {
+const CartPage = ({ params }: { params: { orderId: string }}) => {
   const router = useRouter();
   const { paymentMethods, user, getActiveCarts, setActiveCarts } =
     useUserStore();
@@ -20,7 +20,7 @@ const CartPage = ({ params }: { params: Promise<{ orderId: string }> }) => {
   >("CARD");
 
   const [selectedPaymentId, setSelectedPaymentId] = useState<string>("");
-  const { orderId } = use(params);
+  const { orderId } = params;
   const [cart, setCart] = useState<ActiveCartType | null>(null);
   const [loading, setLoading] = useState(true);
 

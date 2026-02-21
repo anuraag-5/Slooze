@@ -5,14 +5,14 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { getAllPlacedOrders } from "@/lib/app";
 import { PlacedOrderType } from "@/lib/types";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useUserStore } from "@/lib/userstore";
 import Image from "next/image";
 import { signOutUser } from "@/lib/auth";
 import { numanFont } from "@/app/fonts";
 
-const OrdersPage = ({ params }: { params: Promise<{ restId: string }> }) => {
-  const { restId } = use(params);
+const OrdersPage = ({ params }: { params: { restId: string }}) => {
+  const { restId } = params;
   const router = useRouter();
   const { user } = useUserStore();
   const [loading, setLoading] = useState(true);

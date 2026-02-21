@@ -9,10 +9,10 @@ import { PlacedOrderType } from "@/lib/types";
 import { useUserStore } from "@/lib/userstore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const OrderPage = ({ params }: { params: Promise<{ orderId: string }> }) => {
-  const { orderId } = use(params);
+const OrderPage = ({ params }: { params: { orderId: string }}) => {
+  const { orderId } = params;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState<PlacedOrderType | null>(null);

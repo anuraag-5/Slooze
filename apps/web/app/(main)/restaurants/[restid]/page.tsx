@@ -8,17 +8,16 @@ import Settings from "@/components/Settings";
 import { getMenuItems } from "@/lib/app";
 import { MenuItem } from "@/lib/types";
 import { useUserStore } from "@/lib/userstore";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const MenuPage = ({ params }: { params: Promise<{ restId: string }> }) => {
+const MenuPage = ({ params }: { params: { restId: string } }) => {
+  const { restId } = params;
   const router = useRouter();
-  const { restId } = use(params);
   const search = useSearchParams();
   const orderId = search.get("orderId");
-  const { user, activeCarts, setActiveCarts, getActiveCarts } =
-    useUserStore();
+  const { user, activeCarts, setActiveCarts, getActiveCarts } = useUserStore();
   const [loading, setLoading] = useState(true);
   const [menuItems, setMenuItems] = useState<MenuItem[] | null>([]);
   const [currentTab, setCurrenTab] = useState("menu");
@@ -53,7 +52,7 @@ const MenuPage = ({ params }: { params: Promise<{ restId: string }> }) => {
           setCurrentTab={setCurrenTab}
         />
         {currentTab === "menu" ? (
-          <MenuItems menuItems={menuItems} orderId={orderId} restId={restId}/>
+          <MenuItems menuItems={menuItems} orderId={orderId} restId={restId} />
         ) : (
           <Settings />
         )}
@@ -80,17 +79,20 @@ const MenuPage = ({ params }: { params: Promise<{ restId: string }> }) => {
                   onClick={() => router.push(`/cart/${ac.id}`)}
                 >
                   <div className="flex flex-col gap-1">
-                    <div className="text-sm">{ac.orderItems.length + " items"}</div>
-                    <div className="text-xs text-black">Created by:{" "}
+                    <div className="text-sm">
+                      {ac.orderItems.length + " items"}
+                    </div>
+                    <div className="text-xs text-black">
+                      Created by:{" "}
                       <span>
-                        {
-                          user && user.id === ac.userId ? "You" : ` ${ac.user.name} `
-                        }
+                        {user && user.id === ac.userId
+                          ? "You"
+                          : ` ${ac.user.name} `}
                       </span>
                       <span className="text-[#6750A4]">
-                        {" (" + ac.user.role + ") "} 
-                      </span> 
-                      </div>
+                        {" (" + ac.user.role + ") "}
+                      </span>
+                    </div>
                   </div>
                   <div className="rounded-full py-2 px-4 bg-[#6750A4] text-white">
                     View Cart
