@@ -22,7 +22,7 @@ const OrdersPage = () => {
   console.log(placedOrders);
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
-    if (!access_token || restId) {
+    if (!access_token || !restId) {
       return;
     }
     const getPlacedOrders = async () => {
