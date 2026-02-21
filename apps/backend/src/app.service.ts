@@ -173,8 +173,7 @@ export class AppService {
   }> | null> {
     return await this.prisma.order.findFirst({
       where: {
-        id: orderId,
-        status: OrderStatus.DRAFT,
+        id: orderId
       },
       include: {
         orderItems: true,
@@ -197,6 +196,25 @@ export class AppService {
       include: {
         orderItems: true,
         user: true,
+      },
+    });
+  }
+
+  async getAllPlacedOrders({ restId }: { restId: string }): Promise<
+    | Prisma.OrderGetPayload<{
+        include: { orderItems: true; user: true; restaurant: true };
+      }>[]
+    | null
+  > {
+    return await this.prisma.order.findMany({
+      where: {
+        restId,
+        status: OrderStatus.PAID,
+      },
+      include: {
+        orderItems: true,
+        user: true,
+        restaurant: true
       },
     });
   }
@@ -261,11 +279,14 @@ export class AppService {
     });
   }
 
-  async cancelOrder({ orderId }: { orderId: string; restId: string }) {
-    await this.prisma.order.delete({
+  async cancelOrder({ orderId }: { orderId: string; }) {
+    return await this.prisma.order.update({
       where: {
         id: orderId,
       },
+      data: {
+        status: OrderStatus.CANCELLED
+      }
     });
   }
 

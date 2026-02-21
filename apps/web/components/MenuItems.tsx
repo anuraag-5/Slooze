@@ -3,11 +3,13 @@ import MenuOpened from "./MenuOpened";
 import * as motion from "motion/react-client";
 import { MenuItem } from "@/lib/types";
 import { useState } from "react";
-import { numanFont } from "@/app/fonts";
+import { numanFont, poppinsFont } from "@/app/fonts";
 import { useUserStore } from "@/lib/userstore";
 import { getDescriptionForMenu } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const MenuItems = ({menuItems, orderId, restId}: {menuItems: MenuItem[] | null, orderId: string | null, restId: string}) => {
+  const router = useRouter();
   const { user, activeCarts, setActiveCarts, getActiveCarts } =
     useUserStore();
   const [quantity, setQuantity] = useState(0);
@@ -74,10 +76,13 @@ const MenuItems = ({menuItems, orderId, restId}: {menuItems: MenuItem[] | null, 
       >
         <div
           className={
-            "text-lg md:text-xl lg:text-2xl mt-10 " + numanFont.className
+            "text-lg md:text-xl lg:text-2xl mt-10 flex justify-between " + numanFont.className
           }
         >
-          Explore our cuisines :
+          <div>Explore our cuisines :</div>
+          <div className={"text-[#6750A4] text-md md:text-xl cursor-pointer " + poppinsFont.className}
+          onClick={() => router.push(`/orders/${restId}`)}
+          >PLaced Orders</div>
         </div>
 
         <div className="flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-7">

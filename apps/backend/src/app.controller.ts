@@ -146,8 +146,7 @@ export class AppController {
     @Request() req,
     @Body()
     data: {
-      orderId: string;
-      restId: string;
+      orderId: string
     },
   ) {
     if (req.user.role === Role.MEMBER) {
@@ -155,8 +154,7 @@ export class AppController {
     }
 
     return await this.appService.cancelOrder({
-      orderId: data.orderId,
-      restId: data.restId,
+      orderId: data.orderId
     });
   }
 
@@ -166,6 +164,14 @@ export class AppController {
     @Param('restId') restId: string,
   ){
     return await this.appService.getAllActiveDrafts({restId});
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('restaurant/orders/:restId')
+  async getOrders(
+    @Param('restId') restId: string,
+  ){
+    return await this.appService.getAllPlacedOrders({restId});
   }
 
   @UseGuards(AuthGuard)

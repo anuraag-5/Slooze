@@ -10,10 +10,12 @@ const Item = ({
   cartItem,
   restId,
   orderId,
+  isCart
 }: {
   cartItem: OrderItem;
   restId: string;
   orderId: string;
+  isCart: boolean
 }) => {
   const [deleteItem, setDeleteItem] = useState(false);
   const [quantity, setQuantity] = useState(cartItem.quantity);
@@ -51,6 +53,7 @@ const Item = ({
             setActiveCarts={setActiveCarts}
             getActiveCarts={getActiveCarts}
             setDeleteItem={setDeleteItem}
+            isCart={isCart}
           />
         </div>
       )}

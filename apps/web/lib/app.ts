@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ActiveCartType, GroupedPaymentMethods, MenuItem, PaymentMethod, Restaurant } from "./types";
+import { ActiveCartType, GroupedPaymentMethods, MenuItem, PaymentMethod, PlacedOrderType, Restaurant } from "./types";
 
 export const getRestaurants = async (access_token: string) => {
   try {
@@ -145,6 +145,26 @@ export const getOrderByOrderId = async (access_token: string, orderId: string) =
   }
 }
 
+export const getOrderByOrderIdPlaced = async (access_token: string, orderId: string) =>  {
+  try {
+    const resp = await axios.get(
+      process.env.NEXT_PUBLIC_BACKEND_URL! + `/cart/${orderId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      },
+    );
+
+    return resp.data as PlacedOrderType;
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Server Error";
+    console.log(errorMessage);
+    return null;
+  }
+}
+
 export const updatePaymentMethod = async ({access_token, last4, type}:{access_token: string, last4: string, type: "UPI" | "NETBANKING" | "CARD"}) => {
   try {
     const resp = await axios.post(
@@ -189,5 +209,47 @@ export const placeOrder = async ({access_token, restId, paymentMethodId, orderId
       error instanceof Error ? error.message : "Server Error";
     console.log(errorMessage);
     return null;
+  }
+}
+
+export const cancelOrder = async ({access_token, orderId}:{access_token: string,orderId: string}) => {
+  try {
+    const resp = await axios.post(
+      process.env.NEXT_PUBLIC_BACKEND_URL! + `/cancel-order`,
+      {
+        orderId
+      }, {
+        headers: {
+          "Authorization": `Bearer ${access_token}`
+        }
+      }
+    )
+
+    return resp.data as PlacedOrderType;
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Server Error";
+    console.log(errorMessage);
+    return null;
+  }
+}
+
+export const getAllPlacedOrders = async ({ access_token, restId}: {access_token: string, restId: string}) => {
+  try {
+    const resp = await axios.get(
+      process.env.NEXT_PUBLIC_BACKEND_URL! + `/restaurant/orders/${restId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      },
+    );
+
+    return resp.data as PlacedOrderType[];
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Server Error";
+    console.log(errorMessage);
+    return [];
   }
 }

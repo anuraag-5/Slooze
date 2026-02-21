@@ -57,6 +57,7 @@ const CartPage = ({ params }: { params: Promise<{ orderId: string }> }) => {
             cartItem={oi}
             restId={cart.restId}
             orderId={orderId}
+            isCart={true}
           />
         ))}
       <div

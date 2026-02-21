@@ -66,6 +66,46 @@ export type ActiveCartType = {
   };
 };
 
+export type PlacedOrderType = {
+  id: string;
+  userId: string;
+  restId: string;
+  country: "INDIA" | "AMERICA";
+  status: "PAID";
+  paymentMethodId: string;
+  totalAmount: string;
+  createdAt: string;
+  updatedAt: string;
+  paidAt: string;
+
+  orderItems: {
+    id: string;
+    orderId: string;
+    menuItemId: string;
+    name: string;
+    quantity: number;
+    price: string;
+  }[];
+
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    password: string;
+    role: "ADMIN" | "MEMBER" | "MANAGER";
+    country: "INDIA" | "AMERICA";
+    createdAt: string;
+    updatedAt: string;
+  };
+
+  restaurant: {
+    id: string;
+    name: string;
+    country: "AMERICA" | "INDIA";
+    createdAt: string;
+  };
+};
+
 export type OrderItem = {
   id: string;
   orderId: string;
