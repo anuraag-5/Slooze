@@ -24,7 +24,7 @@ const MenuPage = () => {
   const [currentTab, setCurrenTab] = useState("menu");
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
-    if (!access_token) {
+    if (!access_token || !restId) {
       return;
     }
     const getMenu = async () => {

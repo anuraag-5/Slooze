@@ -27,7 +27,7 @@ const CartPage = () => {
 
   const handleCheckout = async () => {
     const access_token = localStorage.getItem("access_token");
-    if (!access_token || user?.role === "MEMBER") return;
+    if (!access_token || user?.role === "MEMBER" || !orderId) return;
     await placeOrder({
       access_token,
       restId: cart!.restId,
