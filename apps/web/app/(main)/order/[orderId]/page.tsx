@@ -8,11 +8,12 @@ import { signOutUser } from "@/lib/auth";
 import { PlacedOrderType } from "@/lib/types";
 import { useUserStore } from "@/lib/userstore";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const OrderPage = ({ params }: { params: { orderId: string }}) => {
-  const { orderId } = params;
+const OrderPage = () => {
+  const params = useParams();
+  const orderId = params?.orderId as string;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState<PlacedOrderType | null>(null);

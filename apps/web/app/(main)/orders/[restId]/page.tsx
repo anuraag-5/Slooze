@@ -4,15 +4,16 @@ import * as motion from "motion/react-client";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { getAllPlacedOrders } from "@/lib/app";
 import { PlacedOrderType } from "@/lib/types";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/lib/userstore";
 import Image from "next/image";
 import { signOutUser } from "@/lib/auth";
 import { numanFont } from "@/app/fonts";
 
-const OrdersPage = ({ params }: { params: { restId: string }}) => {
-  const { restId } = params;
+const OrdersPage = () => {
+  const params = useParams();
+  const restId = params?.restId as string;
   const router = useRouter();
   const { user } = useUserStore();
   const [loading, setLoading] = useState(true);

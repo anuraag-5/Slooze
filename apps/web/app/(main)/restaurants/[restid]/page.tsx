@@ -10,10 +10,11 @@ import { MenuItem } from "@/lib/types";
 import { useUserStore } from "@/lib/userstore";
 import { useEffect, useState } from "react";
 import { AnimatePresence } from "motion/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
-const MenuPage = ({ params }: { params: { restId: string } }) => {
-  const { restId } = params;
+const MenuPage = () => {
+  const params = useParams();
+  const restId = params?.restId as string;
   const router = useRouter();
   const search = useSearchParams();
   const orderId = search.get("orderId");

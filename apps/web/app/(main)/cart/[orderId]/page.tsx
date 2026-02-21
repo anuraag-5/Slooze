@@ -8,10 +8,10 @@ import { signOutUser } from "@/lib/auth";
 import { ActiveCartType } from "@/lib/types";
 import { useUserStore } from "@/lib/userstore";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const CartPage = ({ params }: { params: { orderId: string }}) => {
+const CartPage = () => {
   const router = useRouter();
   const { paymentMethods, user, getActiveCarts, setActiveCarts } =
     useUserStore();
@@ -20,7 +20,8 @@ const CartPage = ({ params }: { params: { orderId: string }}) => {
   >("CARD");
 
   const [selectedPaymentId, setSelectedPaymentId] = useState<string>("");
-  const { orderId } = params;
+  const params = useParams();
+  const orderId = params?.orderId as string;
   const [cart, setCart] = useState<ActiveCartType | null>(null);
   const [loading, setLoading] = useState(true);
 
