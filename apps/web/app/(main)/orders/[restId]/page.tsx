@@ -14,7 +14,7 @@ import { numanFont } from "@/app/fonts";
 const OrdersPage = () => {
   const params = useParams();
   console.log(params);
-  const restId = params?.restid as string;
+  const restId = params?.restId as string;
   const router = useRouter();
   const { user } = useUserStore();
   const [loading, setLoading] = useState(true);
