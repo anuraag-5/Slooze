@@ -27,7 +27,7 @@ jobs:
                   anuraaag5/slooze_backend:${{ github.sha }}
                   anuraaag5/slooze_backend:latest
 
-            - name: Deploy to VM 
+            - name: Deploy to VM
               uses: appleboy/ssh-action@v1.0.3
               with:
                 host: ${{ secrets.VM_HOST }}
