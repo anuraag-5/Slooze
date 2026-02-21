@@ -15,7 +15,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 const MenuPage = () => {
   const params = useParams();
   console.log(params);
-  const restId = params?.restId as string;
+  const restId = params?.restid as string;
   const router = useRouter();
   const search = useSearchParams();
   const orderId = search.get("orderId");
