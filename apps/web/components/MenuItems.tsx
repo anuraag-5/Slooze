@@ -81,7 +81,7 @@ const MenuItems = ({menuItems, orderId, restId}: {menuItems: MenuItem[] | null, 
       >
         <div
           className={
-            "text-lg md:text-xl lg:text-2xl mt-10 flex justify-between items-center" + numanFont.className
+            "text-lg md:text-xl lg:text-2xl mt-10 flex justify-between items-center " + numanFont.className
           }
         >
           <div>Explore our cuisines :</div>
