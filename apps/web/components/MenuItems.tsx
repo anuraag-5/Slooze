@@ -85,7 +85,7 @@ const MenuItems = ({menuItems, orderId, restId}: {menuItems: MenuItem[] | null, 
           }
         >
           <div>Explore our cuisines :</div>
-          <div className={"text-[#6750A4] text-md md:text-xl cursor-pointer " + poppinsFont.className}
+          <div className={"text-[#6750A4] md:text-xl cursor-pointer " + poppinsFont.className}
           onClick={() => router.push(`/orders/${restId}`)}
           >PLaced Orders</div>
         </div>
