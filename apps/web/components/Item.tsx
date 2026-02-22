@@ -40,7 +40,7 @@ const Item = ({
               className="rounded-md object-cover"
             />
             <div className="flex flex-col justify-between text-sm relative left-15 min-w-[180px] my-2">
-              <div className="font-semibold">{cartItem.name}</div>
+              <div className="font-semibold text-sm md:text-[16px]">{cartItem.name}</div>
               <div className="font-light text-xs">Serves 1</div>
             </div>
           </div>
