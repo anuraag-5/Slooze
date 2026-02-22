@@ -42,6 +42,7 @@ jobs:
           
                   sudo docker run -d \
                   --name slooze_backend \
+                  --restart unless-stopped \
                   --restart always \
                   -p 3001:3001 \
                   -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
