@@ -1,135 +1,132 @@
-# Turborepo starter
+# Slooze Food Ordering System
+## 🚀 Tech Stack (Turborepo)
 
-This Turborepo starter is maintained by the Turborepo core team.
+### Backend
+- Nest (TypeScript)
+- PostgreSQL (Neon)
+- Prisma ORM
+- JWT Based Authentication
+- RBAC implemented.
 
-## Using this example
+### Frontend
+- Next.js 15 (App Router)
+- TypeScript
+- shadcn/ui + Tailwind CSS
+- Axios
 
-Run the following command:
+---
 
-```sh
-npx create-turbo@latest
+## 🌍 Way 1: Live Deployed Version (Recommended)
+
+### Frontend
+👉 **https://slooze.anuragbhoite.in/login**
+
+### Backend
+👉 **https://backend.slooze.anuragbhoite.in**
+
+> The deployed version demonstrates the complete end-to-end flow with real authentication, authorization, RBAC.
+
+---
+
+## 🔑 Test Credentials
+
+You can use the following test accounts to verify multi-tenancy and isolation:
+
+**User 1 (ADMIN)**
+* **Email:** `nick@slooze.com`
+* **Password:** `password123`
+
+**User 2 (MANAGER)**
+* **Email:** `america@slooze.com`
+* **Password:** `password123`
+
+**User 3 (MEMBER)**
+* **Email:** `travis@slooze.com`
+* **Password:** `password123`
+
+---
+
+## 🐳 Way 2: (Docker Database)
+
+Follow these steps to get the project running locally using Docker for PostgreSQL and pnpm for package management.
+
+### 1. Prerequisites & Installation
+
+Ensure **Docker** is installed and running. If you don't have **pnpm** installed, install it via npm:
+
+```bash
+npm install -g pnpm
+```
+**Clone the repository and install dependencies:**
+- Make sure you have node version >= 20.19+
+```bash
+git clone https://github.com/anuraag-5/Slooze.git
+cd Slooze
+pnpm install
+npm i -g @nestjs/cli
 ```
 
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
+**Spin up a PostgreSQL container:**
+```bash
+docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres -d postgres
 ```
-cd my-turborepo
+**Create the database environment file:**
+- Path: apps/backend/.env
+- Content:
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```bash
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+**Run the database migrations:**
+- cd apps/backend/prisma
+```bash
+npx prisma migrate dev --name init
+npx prisma generate
 ```
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+**Seed temporary data**
+- cd apps/backend/prisma
+```bash
+pnpm run seed:db
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+**Create the backend environment file:**
+- Path: apps/backend/.env
+- Content (Add):
+```bash
+JWT_SECRET=mysecret
+PORT=3001
+FRONTEND_URL=http://localhost:3000
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
 ```
 
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+**Create the frontend environment file:**
+- Path: apps/frontend/.env
+- Content:
+```bash
+NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
+**5. Running the Application**
+- You will need two terminal windows.
+- Terminal 1: Start Backend
+```bash
+cd apps/backend
+pnpm run start:dev
 ```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+- Terminal 2: Start Frontend Go to the root directory (/Slooze or open a new terminal) and run:
+```bash
+pnpm run dev
 ```
+**🎉 You can now interact with the app at http://localhost:3000.**
 
-## Useful Links
 
-Learn more about the power of Turborepo:
+**Some images**
 
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+<img width="1919" height="869" alt="image" src="https://github.com/user-attachments/assets/c140fa08-a7f3-4944-b3b1-7969a80f1dc9" />
+
+<img width="1919" height="871" alt="image" src="https://github.com/user-attachments/assets/a99fb7f7-1152-4004-ae68-f79e6d61cd0c" />
+
+
+
