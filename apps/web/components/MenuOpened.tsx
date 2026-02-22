@@ -31,7 +31,7 @@ const MenuOpened = ({
   ) => Promise<ActiveCartType[]>;
   onClose: () => void;
 }) => {
-  const debouncedQty = useDebouncedQuantity(quantity, 650);
+  const debouncedQty = useDebouncedQuantity(quantity, 500);
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
     if (!access_token) return;

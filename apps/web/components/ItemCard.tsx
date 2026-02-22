@@ -31,7 +31,7 @@ const ItemCard = ({
   isCart: boolean;
 }) => {
   const router = useRouter();
-  const debouncedQty = useDebouncedQuantity(quantity, 650);
+  const debouncedQty = useDebouncedQuantity(quantity, 500);
   useEffect(() => {
     if (!isCart) {
       return;
