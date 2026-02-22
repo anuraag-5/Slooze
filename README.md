@@ -19,7 +19,7 @@
 ## 🌍 Way 1: Live Deployed Version (Recommended)
 
 ### Frontend
-👉 **https://slooze.anuragbhoite.in**
+👉 **https://slooze.anuragbhoite.in/login**
 
 ### Backend
 👉 **https://backend.slooze.anuragbhoite.in**
