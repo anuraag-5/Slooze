@@ -26,6 +26,7 @@ const MenuPage = () => {
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
     if (!access_token || !restId) {
+      console.log("returning");
       return;
     }
     const getMenu = async () => {
